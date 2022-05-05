@@ -1505,7 +1505,7 @@
 }
 \def\@schapter#1{%
   \cleardoublepage\phantomsection%
-  \thispagestyle{bupt@plain}%
+  \thispagestyle{bupt@empty}%
   \global\@topnum\z@%
   \@afterindenttrue%
   \ifx\bupt@preschapter\empty
@@ -1584,8 +1584,6 @@
 %    \begin{macrocode}
 %<*cfg>
 \renewcommand\contentsname{目\hspace{1em}录}
-\renewcommand\listfigurename{插图索引}
-\renewcommand\listtablename{表格索引}
 %</cfg>
 %<*cls>
 \setcounter{secnumdepth}{3}
@@ -1861,7 +1859,7 @@
   \def\@oddhead{%
     \vbox to\headheight{%
       \hb@xt@\textwidth{%
-        \xiaowu\song\hfill\leftmark%
+        \xiaowu\song\hfill\leftmark\hfill%
       }%
       \vskip3pt\hbox{%
         \vrule width\textwidth height0.4pt depth0pt
@@ -1871,7 +1869,7 @@
   \def\@evenhead{%
     \vbox to\headheight{%
       \hb@xt@\textwidth{%
-        \xiaowu\song\bupt@page@head\hfill
+        \xiaowu\song\hfill\bupt@page@head\hfill
       }%
       \vskip3pt\hbox{%
         \vrule width\textwidth height0.4pt depth0pt
@@ -1886,7 +1884,7 @@
   \def\@oddhead{%
     \vbox to\headheight{%
       \hb@xt@\textwidth{%
-        \xiaowu\song\hfill\bupt@label@tableofpublications%
+        \xiaowu\song\hfill\bupt@label@tableofpublications\hfill%
       }%
       \vskip3pt\hbox{%
         \vrule width\textwidth height0.4pt depth0pt
@@ -1933,6 +1931,7 @@
 %<*cls>
 \bupt@def@metadata{studentid}
 \bupt@def@metadata{ctitle}
+\bupt@def@metadata{cabstitle}
 \bupt@def@metadata{cdegree}
 \bupt@def@metadata{cdepartment}
 \bupt@def@metadata{cmajor}
@@ -1949,6 +1948,7 @@
 \bupt@def@metadata[long]{cabstract}
 \bupt@def@metadata{ckeywords}
 \bupt@def@metadata{etitle}
+\bupt@def@metadata{eabstitle}
 \bupt@def@metadata{edegree}
 \bupt@def@metadata{edepartment}
 \bupt@def@metadata{emajor}
@@ -2279,9 +2279,8 @@
       \end{tabular}
     \end{minipage}\\[1cm]
     \begin{minipage}[t]{\textwidth}%日期
-      \begin{flushright}
-        {\sihao[1.0] \asong \bupt@meta@edate}
-      \end{flushright}
+      \centering
+      {\sihao[1.0] \asong \bupt@meta@edate}
     \end{minipage}
     \normalfont
     \fi
@@ -2355,7 +2354,7 @@
 }
 \def\bupt@authorization@title{关于论文使用授权的说明}
 \long\def\bupt@authorization@body{%
-  本人完全了解并同意北京邮电大学有关保留、使用学位论文的规定，即：北京邮电大学拥有以下关于学位论文的无偿使用权，具体包括：学校有权保留并向国家有关部门或机构送交论文，有权允许学位论文被查阅和借阅；%
+  本人完全了解并同意北京邮电大学有关保留、使用学位论文的规定，即：北京邮电大学拥有以下关于学位论文的无偿使用权，具体包括：学校有权保留并向国家有关部门或机构送交学位论文，有权允许学位论文被查阅和借阅；%
   学校可以公布学位论文的全部或部分内容，有权允许采用影印、缩印或其它复制手段保存、汇编学位论文，将学位论文的全部或部分内容编入有关数据库进行检索。%
   （保密的学位论文在解密后遵守此规定）%
 } 
@@ -2456,17 +2455,15 @@
   \bupt@makeabstract
   \let\@tabular\bupt@tabular%
   \tableofcontents
-  \listoftables
-  \listoffigures
 }
 %% 生成中英文摘要页
 \newcommand{\bupt@makeabstract}{%
-  \pagestyle{bupt@plain}
+  \pagestyle{bupt@empty}
   \pagenumbering{Roman}
   \bupt@chapter*[]%
   {\bupt@label@cabstract}%
   [\xiaosan\hei]%
-  [\centering\sanhao\bupt@meta@ctitle]
+  [\centering\sanhao\bupt@meta@cabstitle]
   {
     \sihao[1.6]
     \par{
@@ -2480,7 +2477,7 @@
   \bupt@chapter*[]%
   {\bupt@label@eabstract} % no tocline
   [\xiaosan]
-  [\centering\sanhao\textbf{\MakeUppercase\bupt@meta@etitle}] % 此处控制英文摘要标题的字体
+  [\centering\sanhao\textbf{\MakeUppercase\bupt@meta@eabstitle}] % 此处控制英文摘要标题的字体
   {    
     \sihao[1.5]
     \par{%
@@ -2531,11 +2528,13 @@
 \ifbupt@class@chapbib\relax%
 \renewcommand{\bibsection}{%
   \bupt@bibsection%
+  \thispagestyle{bupt@headings}%
   \addcontentsline{toc}{section}{\bibname}\wuhao[1.2]%
   \setlength{\bibsep}{6bp plus 0.5ex minus 0.2ex}}
 \else
 \renewcommand{\bibsection}{%
   \bupt@bibsection%
+  \thispagestyle{bupt@headings}%
   \addcontentsline{toc}{chapter}{\bibname}\wuhao[1.2]}
 \fi
 \bibpunct{[}{]}{,}{s}{}{,}
@@ -2810,7 +2809,7 @@
 \captionsetup[figure]{%
   position=bottom,%
   belowskip={12bp-\intextsep},%
-  aboveskip=-2bp%
+  aboveskip=3bp%
 }
 \captionsetup[subfloat]{%
   font=bupt,%
